@@ -1,2 +1,3 @@
 
-/dataset
+*.zip
+/dataset/ml-20m

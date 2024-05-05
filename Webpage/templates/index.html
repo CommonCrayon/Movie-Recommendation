@@ -122,6 +122,39 @@
         #execute-btn:hover {
             background-color: rgba(255, 255, 255, 0.1); /* Lighter background on hover */
         }
+
+        table 
+        {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 25px;
+            margin-bottom: 50px;
+        }
+
+        thead 
+        {
+            background-color: #002159;
+        }
+
+        th 
+        {
+            padding: 12px 15px;
+            text-align: left;
+            color: #ddd;
+            font-size: 20px;
+        }
+
+        tbody td 
+        {
+            padding: 10px 15px;
+            border-bottom: 1px solid #002159;
+            border-left: 1px solid #002159;
+            border-right: 1px solid #002159;
+            background-color: #01337D;
+            color: #ddd;
+            font-size: 18px;
+        }
+
     </style>
 </head>
 <body>
@@ -160,11 +193,24 @@
             <button id="execute-btn" disabled>Generate</button>
         </form>
 
-        <ul>
-            {% for recommendation in recommendations %}
-                <li>{{ recommendation }}</li>
+        {% if recommendations is defined %}
+        <table>
+          <thead>
+            <tr>
+              <th>Movie Title</th>
+              <th>Similarity Score</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for index, row in recommendations.iterrows() %}
+              <tr>
+                <td>{{ row['title'] }}</td>
+                <td>{{ "%.2f" % (row['similarity_score'] * 100) }}%</td>
+              </tr>
             {% endfor %}
-        </ul>
+          </tbody>
+        </table>
+      {% endif %}
     </div>
 
 

@@ -6,7 +6,7 @@ NUM_OF_RECOMMENDATIONS_TO_RETURN = 30
 
 
 # Let's assume you have another dataset containing movie information like movie_id, title, genres
-movies_dataframe = pd.read_csv("../dataset/ml-100k/u.item", delimiter="|", encoding="latin1",
+movies_dataframe = pd.read_csv("./Dataset/Working/u.item", delimiter="|", encoding="latin1",
                                names=["item id", "title", "release date", 
                                       "video release date", "IMDb URL", "unknown", 
                                       "Action", "Adventure", "Animation",
@@ -24,7 +24,7 @@ movies_dataframe = movies_dataframe.drop(["release date", "video release date", 
 
 
 # Reading the dataset
-userbase1_dataframe = pd.read_csv("../dataset/ml-100k/u1.base", names=['user id', 'item id', 'rating', 'timestamp'], delimiter="\t")
+userbase1_dataframe = pd.read_csv("./Dataset/Working/u.data", names=['user id', 'item id', 'rating', 'timestamp'], delimiter="\t")
 userbase1_dataframe = userbase1_dataframe.drop(["timestamp"], axis=1)
 
 
@@ -42,19 +42,18 @@ utility_matrix = userbase1_dataframe.pivot(index='user id', columns='item id', v
 # Where both the rows and columns are labeled with user ids, and the values represent the cosine similarity between corresponding users based on their ratings.
 cosine_sim_df = pd.DataFrame(cosine_sim_matrix, index=user_item_matrix.index, columns=user_item_matrix.index)
 
+
+def check_user_id(user_id):
+    user_dataframe = pd.read_csv("Dataset/Working/u.data", names=['userId', 'item id', 'rating', 'timestamp'], delimiter="\t")
+
+    if user_id in user_dataframe['userId'].values:
+        return True
+    else:
+        return False
+
+
 def user_recommendations(user_id, cosine_sim_df=cosine_sim_df, utility_matrix=utility_matrix, movies_dataframe=movies_dataframe):
-    """
-    Recommend items for a given user based on ratings from similar users.
-    
-    Parameters:
-        user_id (int): The user for whom items are to be recommended.
-        cosine_sim_df (pd.DataFrame): DataFrame containing cosine similarity matrix.
-        utility_matrix (pd.DataFrame): DataFrame containing the utility matrix of ratings.
-        movies_dataframe (pd.DataFrame): DataFrame containing movie titles.
-        
-    Returns:
-        recommended_items_df (pd.DataFrame): DataFrame containing recommended items with titles and aggregated scores.
-    """
+
     # Get cosine similarity scores for the given user
     user_similarity_scores = cosine_sim_df[user_id]
     

@@ -1,8 +1,7 @@
 from flask import Flask, request, render_template
 import pandas as pd
-import sys
-from genreRecommendations import genre_recommendations
-from userRecommendations import user_recommendations
+from scripts.genreRecommendations import genre_recommendations
+from scripts.userRecommendations import user_recommendations, check_user_id
 
 app = Flask(__name__)
 
@@ -30,14 +29,9 @@ def user():
     try:
         # Retrieving the user ID from the form
         user_id = int(request.form['userId'])
-        
-        # Load user DataFrame
-        user_dataframe = pd.read_csv("../dataset/ml-100k/u.data", names=['userId', 'item id', 'rating', 'timestamp'], delimiter="\t")
-
-        print(user_id, file=sys.stdout)
 
         # Check if user_id exists in the dataframe
-        if user_id in user_dataframe['userId'].values:
+        if check_user_id(user_id):
             return render_template('user.html', user_id=user_id, recommendations=user_recommendations(user_id))
         else:
             return render_template('login.html', error=True)

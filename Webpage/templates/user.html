@@ -86,6 +86,11 @@
             color: #FFFFFF;
         }
 
+        h3 
+        {
+            color: #FFFFFF;
+        }
+
         table 
         {
             border-collapse: collapse;
@@ -131,7 +136,7 @@
         <h2>Welcome User: {{ user_id }}</h2>
 
         {% if recommendations is defined %}
-        <h2>We recommend these Movies for you to watch!</h2>
+        <h3>We recommend these Movies for you to watch:</h3>
         <table>
           <thead>
             <tr>
@@ -150,7 +155,7 @@
         </table>
       {% endif %}
 
-      <h2>Rate Movies: </h2>
+      <h3>Rate Movies: </h3>
 
     </div>
 

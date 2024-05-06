@@ -34,7 +34,7 @@ def get_recommendations_genre(genres, vectorizer, genre_matrix, movies_dataframe
 
 # Function to generate movie recommendations based on selected genres
 def genre_recommendations(selected_genres):
-    movies_dataframe = pd.read_csv("../dataset/ml-100k/u.item", delimiter="|", encoding="latin1",
+    movies_dataframe = pd.read_csv("./Dataset/Working/u.item", delimiter="|", encoding="latin1",
                                 names=["item id", "title", "release date", 
                                         "video release date", "IMDb URL", "unknown", 
                                         "Action", "Adventure", "Animation",

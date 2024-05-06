@@ -85,6 +85,38 @@
             font-size: 20px;
             color: #FFFFFF;
         }
+
+        table 
+        {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 25px;
+            margin-bottom: 50px;
+        }
+
+        thead 
+        {
+            background-color: #002159;
+        }
+
+        th 
+        {
+            padding: 12px 15px;
+            text-align: left;
+            color: #ddd;
+            font-size: 20px;
+        }
+
+        tbody td 
+        {
+            padding: 10px 15px;
+            border-bottom: 1px solid #002159;
+            border-left: 1px solid #002159;
+            border-right: 1px solid #002159;
+            background-color: #01337D;
+            color: #ddd;
+            font-size: 18px;
+        }
     </style>
 </head>
 <body>
@@ -99,25 +131,27 @@
         <h2>Welcome User: {{ user_id }}</h2>
 
         {% if recommendations is defined %}
+        <h2>We recommend these Movies for you to watch!</h2>
         <table>
           <thead>
             <tr>
               <th>Movie Title</th>
-              <th>Similarity Score</th>
+              <th>Aggregated Score</th>
             </tr>
           </thead>
           <tbody>
             {% for index, row in recommendations.iterrows() %}
               <tr>
                 <td>{{ row['title'] }}</td>
-                <td>{{ "%.2f" % (row['similarity_score'] * 100) }}%</td>
+                <td>{{ "%.2f" % (row['aggregated_score']) }}</td>
               </tr>
             {% endfor %}
           </tbody>
         </table>
       {% endif %}
 
-      
+      <h2>Rate Movies: </h2>
+
     </div>
 
     <footer>

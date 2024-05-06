@@ -117,6 +117,61 @@
             color: #ddd;
             font-size: 18px;
         }
+
+        
+        form {
+            width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #002159;
+            background-color: #01337D;
+            border-radius: 5px; 
+        }
+
+        label 
+        {
+            color: white;
+            font-size: 18px;
+            margin: 2px 0 4px 0;
+        }
+
+        input[type="text"]
+        {
+            display: block;
+            width: 22px;
+            height: 90%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        select, button {
+            display: block;
+            width: 22px;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+
+        }
+
+        select {
+            width: calc(100% - 24px);
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
     </style>
 </head>
 <body>
@@ -131,27 +186,41 @@
         <h2>Welcome User: {{ user_id }}</h2>
 
         {% if recommendations is defined %}
-        <h3>We recommend these Movies for you to watch:</h3>
-        <table>
-          <thead>
-            <tr>
-              <th>Movie Title</th>
-              <th>Aggregated Score</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for index, row in recommendations.iterrows() %}
-              <tr>
-                <td>{{ row['title'] }}</td>
-                <td>{{ "%.2f" % (row['aggregated_score']) }}</td>
-              </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      {% endif %}
+            <h3>We recommend these Movies for you to watch:</h3>
 
-      <h3>Rate Movies: </h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Movie Title</th>
+                        <th>Aggregated Score</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for index, row in recommendations.iterrows() %}
+                        <tr>
+                            <td>{{ row['title'] }}</td>
+                            <td>{{ "%.2f" % (row['aggregated_score']) }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
 
+
+
+        <h3>Rate Movies: </h3>
+
+        <form action="#">
+            <label for="items">Select an item:</label>
+            <input type="text" id="searchInput" onkeyup="filterItems()" placeholder="Search for Movies...">
+            <select id="items" name="items">
+                <option value="">-- Select --</option>
+                {% for index, row in movies.iterrows() %}
+                    <option value="{{row['item id']}}">{{row['title']}}</option>
+                {% endfor %}
+            </select>
+            <button type="submit">Submit</button>
+        </form>
     </div>
 
     <footer>
@@ -160,9 +229,22 @@
         </div>
     </footer>
 
-
     <script>
-
-    </script>
+        function filterItems() {
+          var input, filter, select, options, option, i;
+          input = document.getElementById("searchInput");
+          filter = input.value.toUpperCase();
+          select = document.getElementById("items");
+          options = select.getElementsByTagName("option");
+          for (i = 0; i < options.length; i++) {
+            option = options[i];
+            if (option.innerHTML.toUpperCase().indexOf(filter) > -1) {
+              option.style.display = "";
+            } else {
+              option.style.display = "none";
+            }
+          }
+        }
+      </script>
 </body>
 </html>

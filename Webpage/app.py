@@ -1,7 +1,7 @@
 from flask import Flask, request, render_template
-import pandas as pd
 from scripts.genreRecommendations import genre_recommendations
 from scripts.userRecommendations import user_recommendations, check_user_id
+from scripts.movieDataset import get_movies
 
 app = Flask(__name__)
 
@@ -32,7 +32,7 @@ def user():
 
         # Check if user_id exists in the dataframe
         if check_user_id(user_id):
-            return render_template('user.html', user_id=user_id, recommendations=user_recommendations(user_id))
+            return render_template('user.html', user_id=user_id, recommendations=user_recommendations(user_id), movies=get_movies())
         else:
             return render_template('login.html', error=True)
         

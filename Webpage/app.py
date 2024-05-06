@@ -61,6 +61,40 @@ def generate_recommendations(selected_genres):
 def index():
     return render_template('index.html')
 
+@app.route('/login')
+def about():
+    return render_template('login.html', error=False)
+
+@app.route('/user', methods=['POST'])
+def user():
+    try:
+        # Retrieving the user ID from the form
+        user_id = int(request.form['userId'])
+        
+        # Load user DataFrame
+        user_dataframe = pd.read_csv("../dataset/ml-100k/u.user", names=['userId', 'item id', 'rating', 'timestamp'], delimiter="\t")
+
+        print(user_id)
+
+        # Check if user_id exists in the dataframe
+        if user_id in user_dataframe['userId'].values:
+            print("Is in Dataset")
+            return render_template('index.html')
+        else:
+            print("NOT in Dataset")
+            return render_template('login.html', error=True)
+    except (KeyError, ValueError) as e:
+        # Handle errors such as missing key in form or inability to convert to integer
+        print("Error:", e)
+        return render_template('login.html', error=True)
+    except Exception as e:
+        # Handle other unexpected errors
+        print("Unexpected Error:", e)
+        return render_template('login.html', error=True)
+
+
+
+
 @app.route('/execute', methods=['POST'])
 def execute():
     selected_genres = request.form.getlist('genres')

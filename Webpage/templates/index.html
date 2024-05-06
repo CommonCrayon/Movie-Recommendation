@@ -5,14 +5,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Movie Recommendations</title>
     <style>
+        html 
+        {
+            width: 100vw;
+        }
+
         body 
         {
             background-color: #1F2933;
             margin: 0 0 0 0;
+            padding: 0 0 0 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        footer {
+            margin-top: auto;
+            width: 100%;
+            background-color: #333;
+            padding: 20px 0 20px 0;
+            color: #FFFFFF;
+            text-align: center;
+            border-top: 2px solid #222;
         }
 
         .header 
         {
+            padding: 0 0 0 0;
             text-align: center;
             font-size: 70px;
             margin-top: 50px;
@@ -108,8 +128,8 @@
             color: white;
             font-weight: bold;
             font-size: 16px;
-            border-radius: 5px; /* Rounded corners */
-            transition: background-color 0.3s ease; /* Smooth transition */
+            border-radius: 5px; 
+            transition: background-color 0.3s ease;
             background-color: #333;
         }
 
@@ -120,7 +140,7 @@
         }
 
         #execute-btn:hover {
-            background-color: rgba(255, 255, 255, 0.1); /* Lighter background on hover */
+            background-color: rgba(255, 255, 255, 0.1);
         }
 
         table 
@@ -160,8 +180,8 @@
 <body>
     <div class="header">Movie Recommendations</div>
     <div class="navbar">
-        <a href="#">Genre</a>
-        <a href="#">User</a>
+        <a href="/">Genre</a>
+        <a href="/login">User</a>
         <a href="#">Compare</a>
     </div>
 
@@ -216,51 +236,46 @@
 
 
     <footer>
-        <div style="text-align: center; color: #FFFFFF; padding: 20px; background-color: #333; border-top: 2px solid #222;">
+        <div>
             Made By Talha Ahmed, Samuel Ip and Jackie Lin
         </div>
     </footer>
-</footer>
 
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const genres = document.querySelectorAll('.genre');
+            const executeBtn = document.getElementById('execute-btn');
+            const genreForm = document.getElementById('genre-form');
 
+            genres.forEach(genre => {
+                genre.addEventListener('click', function() {
+                    this.classList.toggle('selected');
+                    checkSelectedGenres();
+                });
+            });
 
+            function checkSelectedGenres() {
+                const selectedGenres = document.querySelectorAll('.genre.selected');
+                if (selectedGenres.length > 0) {
+                    executeBtn.removeAttribute('disabled');
+                } else {
+                    executeBtn.setAttribute('disabled', 'disabled');
+                }
+            }
 
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const genres = document.querySelectorAll('.genre');
-        const executeBtn = document.getElementById('execute-btn');
-        const genreForm = document.getElementById('genre-form');
-
-        genres.forEach(genre => {
-            genre.addEventListener('click', function() {
-                this.classList.toggle('selected');
-                checkSelectedGenres();
+            genreForm.addEventListener('submit', function(event) {
+                event.preventDefault(); // Prevent default form submission
+                const selectedGenres = document.querySelectorAll('.genre.selected');
+                const selectedGenreValues = Array.from(selectedGenres).map(genre => genre.dataset.genre);
+                const hiddenInput = document.createElement('input');
+                hiddenInput.setAttribute('type', 'hidden');
+                hiddenInput.setAttribute('name', 'genres');
+                hiddenInput.setAttribute('value', selectedGenreValues.join(','));
+                this.appendChild(hiddenInput);
+                this.submit(); // Submit the form with hidden input
             });
         });
-
-        function checkSelectedGenres() {
-            const selectedGenres = document.querySelectorAll('.genre.selected');
-            if (selectedGenres.length > 0) {
-                executeBtn.removeAttribute('disabled');
-            } else {
-                executeBtn.setAttribute('disabled', 'disabled');
-            }
-        }
-
-        genreForm.addEventListener('submit', function(event) {
-            event.preventDefault(); // Prevent default form submission
-            const selectedGenres = document.querySelectorAll('.genre.selected');
-            const selectedGenreValues = Array.from(selectedGenres).map(genre => genre.dataset.genre);
-            const hiddenInput = document.createElement('input');
-            hiddenInput.setAttribute('type', 'hidden');
-            hiddenInput.setAttribute('name', 'genres');
-            hiddenInput.setAttribute('value', selectedGenreValues.join(','));
-            this.appendChild(hiddenInput);
-            this.submit(); // Submit the form with hidden input
-        });
-    });
-</script>
+    </script>
 </body>
 </html>

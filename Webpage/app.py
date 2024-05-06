@@ -2,9 +2,9 @@ from flask import Flask, request, render_template
 import pandas as pd
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
+import sys
 
-number_of_recommendations_to_return = 30
-
+NUM_OF_RECOMMENDATIONS_TO_RETURN = 30
 
 app = Flask(__name__)
 
@@ -28,7 +28,7 @@ def get_recommendations_genre(genres, vectorizer, genre_matrix, movies_dataframe
     genre_similarity = cosine_similarity(genres_vector, genre_matrix).flatten()
     
     # Get indices of top similar movies
-    top_indices = genre_similarity.argsort()[::-1][1:number_of_recommendations_to_return]  # Exclude the first, as it's the input itself
+    top_indices = genre_similarity.argsort()[::-1][1:NUM_OF_RECOMMENDATIONS_TO_RETURN]  # Exclude the first, as it's the input itself
     
     # Get the movie titles and similarity scores
     recommended_movies = movies_dataframe.iloc[top_indices][['title']].copy()
@@ -72,17 +72,18 @@ def user():
         user_id = int(request.form['userId'])
         
         # Load user DataFrame
-        user_dataframe = pd.read_csv("../dataset/ml-100k/u.user", names=['userId', 'item id', 'rating', 'timestamp'], delimiter="\t")
+        user_dataframe = pd.read_csv("../dataset/ml-100k/u.data", names=['userId', 'item id', 'rating', 'timestamp'], delimiter="\t")
 
-        print(user_id)
+        print(user_id, file=sys.stdout)
 
         # Check if user_id exists in the dataframe
         if user_id in user_dataframe['userId'].values:
             print("Is in Dataset")
-            return render_template('index.html')
+            return render_template('user.html', user_id=user_id)
         else:
             print("NOT in Dataset")
             return render_template('login.html', error=True)
+        
     except (KeyError, ValueError) as e:
         # Handle errors such as missing key in form or inability to convert to integer
         print("Error:", e)
@@ -91,9 +92,6 @@ def user():
         # Handle other unexpected errors
         print("Unexpected Error:", e)
         return render_template('login.html', error=True)
-
-
-
 
 @app.route('/execute', methods=['POST'])
 def execute():
@@ -105,6 +103,7 @@ def execute():
     
     # Pass recommendations to the template
     return render_template('index.html', recommendations=recommendations)
+
 
 if __name__ == '__main__':
     app.run(debug=True)

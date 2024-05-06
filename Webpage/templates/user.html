@@ -120,12 +120,11 @@
 
         
         form {
-            width: 400px;
-            margin: 0 auto;
-            padding: 20px;
+            padding: 25px 25px 25px 25px;
             border: 1px solid #002159;
             background-color: #01337D;
             border-radius: 5px; 
+            margin-bottom: 25px;
         }
 
         label 
@@ -133,43 +132,91 @@
             color: white;
             font-size: 18px;
             margin: 2px 0 4px 0;
+            width: auto;
         }
 
         input[type="text"]
         {
-            display: block;
-            width: 22px;
-            height: 90%;
-            padding: 10px;
-            margin-bottom: 10px;
+            height: 32px;
+            width: 35%;
             border: 1px solid #ccc;
             border-radius: 5px;
-        }
-
-        select, button {
-            display: block;
-            width: 22px;
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-
-        }
+            font-size: 18px;
+            margin-left: 10px; 
+                }
 
         select {
-            width: calc(100% - 24px);
+            height: 32px;
+            width: 35%;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 18px;
+            margin-left: 10px; 
         }
 
-        button {
+        .button-find {
+            height: 32px;
+            width: 100px;
+            margin-left: 50px; 
             background-color: #4CAF50;
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            font-size: 18px;
         }
 
         button:hover {
             background-color: #45a049;
+        }
+
+        .div-rate 
+        {
+            margin: 25px 0 50px 0;
+            border: 1px solid #002159;
+            background-color: #01337D;  
+            border-radius: 5px;
+            min-height: 200px;  
+            display: none;
+            align-items: center;
+        }
+
+        h1 
+        {
+            margin-left: 25px;
+            color: white;
+            min-width: 400px;
+        }
+
+        .card 
+        {
+            width: 100%;
+            display: flex;
+            align-items: center;
+        }
+        
+        .star 
+        {
+            font-size: 10vh;
+            cursor: pointer;
+            padding-bottom: 20px;
+        }
+        
+        .checked 
+        {
+            color: rgb(255, 255, 0);
+        }
+
+        .button-rate {
+            height: 64px;
+            width: 512px;
+            margin-right: 50px; 
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
         }
 
     </style>
@@ -207,20 +254,35 @@
         {% endif %}
 
 
-
+        {% if movies is defined %}
         <h3>Rate Movies: </h3>
 
-        <form action="#">
-            <label for="items">Select an item:</label>
+        <form id="movieForm">
+            <label for="items">Select a Movie:</label>
             <input type="text" id="searchInput" onkeyup="filterItems()" placeholder="Search for Movies...">
             <select id="items" name="items">
-                <option value="">-- Select --</option>
+                <option value="" disabled selected>Select a movie</option>
                 {% for index, row in movies.iterrows() %}
                     <option value="{{row['item id']}}">{{row['title']}}</option>
                 {% endfor %}
             </select>
-            <button type="submit">Submit</button>
+            <button class="button-find" type="submit">Find</button>
         </form>
+        {% endif %}
+
+        <div class="div-rate">
+                <h1 id="selectedMovieTitle">Movie Title</h1>
+
+                <div class="card">
+                    <span onclick="rating(1)"class="star">★</span>
+                    <span onclick="rating(2)"class="star">★</span>
+                    <span onclick="rating(3)"class="star">★</span>
+                    <span onclick="rating(4)"class="star">★</span>
+                    <span onclick="rating(5)"class="star">★</span>
+                </div>
+                
+                <button class="button-rate">Submit Rating</button>
+        </div>
     </div>
 
     <footer>
@@ -230,20 +292,75 @@
     </footer>
 
     <script>
-        function filterItems() {
-          var input, filter, select, options, option, i;
-          input = document.getElementById("searchInput");
-          filter = input.value.toUpperCase();
-          select = document.getElementById("items");
-          options = select.getElementsByTagName("option");
-          for (i = 0; i < options.length; i++) {
-            option = options[i];
-            if (option.innerHTML.toUpperCase().indexOf(filter) > -1) {
-              option.style.display = "";
-            } else {
-              option.style.display = "none";
+        document.getElementById('movieForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            var selectedMovie = document.getElementById('items');
+
+            // Check if the selected option is the placeholder
+            if (selectedMovie.value === "") {
+                return;
             }
-          }
+
+            var selectedMovieTitle = selectedMovie.options[selectedMovie.selectedIndex].text;
+            document.querySelector('.div-rate').style.display = 'flex';
+
+            document.getElementById('selectedMovieTitle').textContent = selectedMovieTitle;
+        });
+
+        function filterItems() {
+            var input, filter, select, options, option, i;
+            input = document.getElementById("searchInput");
+            filter = input.value.toUpperCase();
+            select = document.getElementById("items");
+            options = select.getElementsByTagName("option");
+            var firstVisibleOption = null;  
+
+            for (i = 0; i < options.length; i++) 
+            {
+                option = options[i];
+                if (option.innerHTML.toUpperCase().indexOf(filter) > -1) 
+                {
+                    option.style.display = "";
+                    if (!firstVisibleOption) {
+                        firstVisibleOption = option;
+                    }
+                } 
+                else 
+                {
+                    option.style.display = "none";
+                }
+            }
+
+                // Select the first visible option after filtering
+            if (firstVisibleOption) {
+                firstVisibleOption.selected = true;
+            }
+        }
+
+        // To access the stars
+        let stars = document.getElementsByClassName("star");
+        let output = document.getElementById("output");
+        stars[0].className = "star checked"
+        stars[1].className = "star checked"
+        stars[2].className = "star checked"
+
+        // Funtion to update rating
+        function rating(n) {
+            remove();
+            for (let i = 0; i < n; i++) {
+                stars[i].className = "star checked";
+            }
+        }
+        
+        // To remove the pre-applied styling
+        function remove() {
+            let i = 0;
+            while (i < 5) 
+            {
+                stars[i].className = "star";
+                i++;
+            }
         }
       </script>
 </body>

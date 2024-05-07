@@ -1,6 +1,7 @@
 import pandas as pd
 from sklearn.metrics.pairwise import cosine_similarity
 from scipy.sparse import csr_matrix
+from datetime import datetime
 
 NUM_OF_RECOMMENDATIONS_TO_RETURN = 30
 
@@ -90,3 +91,32 @@ def user_recommendations(user_id, cosine_sim_df=cosine_sim_df, utility_matrix=ut
     recommended_items_df = recommended_items_df.sort_values(by='aggregated_score', ascending=False).reset_index(drop=True)
     
     return recommended_items_df
+
+
+
+def update_u_data(user_id, item_id, rating):
+    # Read the existing u.data file
+    user_dataframe = pd.read_csv("./Dataset/Working/u.data", names=['user id', 'item id', 'rating', 'timestamp'], delimiter="\t")
+    
+    # Create user if not found
+    if user_id not in user_dataframe['user id'].values:
+        new_user = pd.DataFrame([[user_id, 0, 0, datetime.now().timestamp()]], columns=['user id', 'item id', 'rating', 'timestamp'])
+        user_dataframe = user_dataframe.append(new_user, ignore_index=True)
+        print(f"User {user_id} created.")
+    
+    # Create item if not found
+    if item_id not in user_dataframe['item id'].values:
+        new_item = pd.DataFrame([[0, item_id, 0, datetime.now().timestamp()]], columns=['user id', 'item id', 'rating', 'timestamp'])
+        user_dataframe = user_dataframe.append(new_item, ignore_index=True)
+        print(f"Item {item_id} created.")
+    
+    # Update the rating for the given user_id and item_id
+    user_dataframe.loc[(user_dataframe['user id'] == user_id) & (user_dataframe['item id'] == item_id), 'rating'] = rating
+    
+    # Update the timestamp
+    user_dataframe.loc[(user_dataframe['user id'] == user_id) & (user_dataframe['item id'] == item_id), 'timestamp'] = datetime.now().timestamp()
+    
+    # Save the updated u.data file
+    user_dataframe.to_csv("./Dataset/Working/u.data", header=False, index=False, sep='\t')
+    
+    print("u.data updated successfully.")

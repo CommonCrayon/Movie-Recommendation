@@ -170,6 +170,18 @@
             background-color: #45a049;
         }
 
+        .div-rate-placeholder 
+        {
+            margin: 25px 0 50px 0;
+            border: 1px solid #002159;
+            background-color: #01337D;  
+            border-radius: 5px;
+            min-height: 200px;  
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
         .div-rate 
         {
             margin: 25px 0 50px 0;
@@ -209,7 +221,7 @@
 
         .button-rate {
             height: 64px;
-            width: 512px;
+            width: 256px;
             margin-right: 50px; 
             background-color: #4CAF50;
             color: white;
@@ -217,6 +229,15 @@
             border-radius: 5px;
             cursor: pointer;
             font-size: 18px;
+        }
+
+        form#ratingForm
+        {
+            margin: 0 25px 0 0;
+            padding: 0 0 0 0;
+            width: 256px;
+            background-color: rgba(255, 255, 255, 0);
+            border: rgba(255, 255, 255, 0);
         }
 
         #selectedMovieRatingText
@@ -230,9 +251,9 @@
 <body>
     <div class="header">Movie Recommendations</div>
     <div class="navbar">
-        <a href="/">Genre</a>
-        <a href="/login">User</a>
-        <a href="/compare">Compare</a>
+        <a href="/">Genre Recommendations</a>
+        <a href="/login">User Recommendations</a>
+        <!--<a href="/compare">Compare</a>-->
     </div>
 
     <div class="div-main">
@@ -276,6 +297,10 @@
         </form>
         {% endif %}
 
+        <div class="div-rate-placeholder">
+            <h1>Pick a Movie to see Rating</h1>
+        </div>
+
         <div class="div-rate">
                 <h1 id="selectedMovieTitle">Movie Title</h1>
 
@@ -288,7 +313,13 @@
                 </div>
                 
                 <h2 id="selectedMovieRatingText"></h2>
-                <button class="button-rate">Submit Rating</button>
+
+                <form id="ratingForm" method="post" action="/update">
+                    <input type="hidden" name="user_id" value="{{ user_id }}">
+                    <input type="hidden" id="selectedMovieId" name="item_id" value="">
+                    <input type="hidden" id="selectedRating" name="rating" value="">
+                    <button type="submit" class="button-rate">Submit Rating</button>
+                </form>
         </div>
     </div>
 
@@ -309,7 +340,7 @@
                 return;
             }
 
-            document.getElementById('selectedMovieTitle').textContent =  selectedMovie.options[selectedMovie.selectedIndex].text;
+            document.getElementById('selectedMovieTitle').textContent = selectedMovie.options[selectedMovie.selectedIndex].text;
 
             var selectedRating = selectedMovie.options[selectedMovie.selectedIndex].dataset.rating;
             let stars = document.getElementsByClassName("star")
@@ -326,6 +357,7 @@
 
             // Unhide div
             document.querySelector('.div-rate').style.display = 'flex';
+            document.querySelector('.div-rate-placeholder').style.display = 'none';
         });
 
         function filterItems() {
@@ -380,6 +412,13 @@
                 i++;
             }
         }
+
+        document.getElementById('ratingForm').addEventListener('submit', function(event) {
+            var selectedMovie = document.getElementById('items');
+
+            document.getElementById('selectedMovieId').value = selectedMovie.value;
+            document.getElementById('selectedRating').value = Math.round(selectedMovie.options[selectedMovie.selectedIndex].dataset.rating);
+        });
       </script>
 </body>
 </html>

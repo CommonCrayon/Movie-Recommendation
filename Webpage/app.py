@@ -9,9 +9,13 @@ app = Flask(__name__)
 def index():
     return render_template('index.html')
 
+
+
 @app.route('/login')
 def about():
     return render_template('login.html', error=False)
+
+
 
 @app.route('/genre', methods=['POST'])
 def execute():
@@ -24,7 +28,9 @@ def execute():
     # Pass recommendations to the template
     return render_template('index.html', recommendations=recommendations)
 
-@app.route('/user', methods=['GET', 'POST'])
+
+
+@app.route('/user', methods=['POST'])
 def user():
     try:
         # Retrieving the user ID from the form
@@ -44,6 +50,13 @@ def user():
         # Handle other unexpected errors
         print("Unexpected Error:", e)
         return render_template('login.html', error=True)
+
+
+
+@app.route('/compare', methods=['GET'])
+def compare():
+    return render_template('compare.html', error=False)
+
 
 if __name__ == '__main__':
     app.run(debug=True)

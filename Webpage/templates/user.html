@@ -185,7 +185,7 @@
         {
             margin-left: 25px;
             color: white;
-            min-width: 400px;
+            min-width: 350px;
         }
 
         .card 
@@ -217,6 +217,12 @@
             border-radius: 5px;
             cursor: pointer;
             font-size: 18px;
+        }
+
+        #selectedMovieRatingText
+        {
+            font-size: 28px;
+            margin-right: 20px;
         }
 
     </style>
@@ -263,7 +269,7 @@
             <select id="items" name="items">
                 <option value="" disabled selected>Select a movie</option>
                 {% for index, row in movies.iterrows() %}
-                    <option value="{{row['item id']}}">{{row['title']}}</option>
+                    <option value="{{row['item id']}}" data-rating="{{row['rating']}}">{{row['title']}}</option>
                 {% endfor %}
             </select>
             <button class="button-find" type="submit">Find</button>
@@ -281,6 +287,7 @@
                     <span onclick="rating(5)"class="star">★</span>
                 </div>
                 
+                <h2 id="selectedMovieRatingText"></h2>
                 <button class="button-rate">Submit Rating</button>
         </div>
     </div>
@@ -302,10 +309,23 @@
                 return;
             }
 
-            var selectedMovieTitle = selectedMovie.options[selectedMovie.selectedIndex].text;
-            document.querySelector('.div-rate').style.display = 'flex';
+            document.getElementById('selectedMovieTitle').textContent =  selectedMovie.options[selectedMovie.selectedIndex].text;
 
-            document.getElementById('selectedMovieTitle').textContent = selectedMovieTitle;
+            var selectedRating = selectedMovie.options[selectedMovie.selectedIndex].dataset.rating;
+            let stars = document.getElementsByClassName("star")
+            
+            if (!isNaN(Number(selectedRating)))
+            {
+                rating(selectedRating);
+            }
+            else
+            {
+                rating(0);
+                document.getElementById('selectedMovieRatingText').textContent = "Not Rated";
+            }
+
+            // Unhide div
+            document.querySelector('.div-rate').style.display = 'flex';
         });
 
         function filterItems() {
@@ -341,13 +361,11 @@
         // To access the stars
         let stars = document.getElementsByClassName("star");
         let output = document.getElementById("output");
-        stars[0].className = "star checked"
-        stars[1].className = "star checked"
-        stars[2].className = "star checked"
 
         // Funtion to update rating
         function rating(n) {
             remove();
+            document.getElementById('selectedMovieRatingText').textContent = Math.round(n);
             for (let i = 0; i < n; i++) {
                 stars[i].className = "star checked";
             }

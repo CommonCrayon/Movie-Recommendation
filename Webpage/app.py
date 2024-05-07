@@ -24,7 +24,7 @@ def execute():
     # Pass recommendations to the template
     return render_template('index.html', recommendations=recommendations)
 
-@app.route('/user', methods=['POST'])
+@app.route('/user', methods=['GET', 'POST'])
 def user():
     try:
         # Retrieving the user ID from the form
@@ -32,7 +32,7 @@ def user():
 
         # Check if user_id exists in the dataframe
         if check_user_id(user_id):
-            return render_template('user.html', user_id=user_id, recommendations=user_recommendations(user_id), movies=get_movies())
+            return render_template('user.html', user_id=user_id, recommendations=user_recommendations(user_id), movies=get_movies(user_id))
         else:
             return render_template('login.html', error=True)
         

@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, jsonify
+from flask import Flask, request, render_template
 from scripts.genreRecommendations import genre_recommendations
 from scripts.userRecommendations import user_recommendations, check_user_id, update_u_data
 from scripts.movieDataset import get_movies

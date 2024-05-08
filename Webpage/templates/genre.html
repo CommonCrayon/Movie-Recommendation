@@ -46,24 +46,24 @@
             <button id="execute-btn" disabled>Generate</button>
         </form>
 
-        {% if recommendations is defined %}
-        <table>
-          <thead>
-            <tr>
-              <th>Movie Title</th>
-              <th>Similarity Score</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for index, row in recommendations.iterrows() %}
-              <tr>
-                <td>{{ row['title'] }}</td>
-                <td>{{ "%.2f" % (row['similarity_score'] * 100) }}%</td>
-              </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      {% endif %}
+        {% if recommendations is defined and not recommendations.empty %}
+            <table>
+            <thead>
+                <tr>
+                <th>Movie Title</th>
+                <th>Similarity Score</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for index, row in recommendations.iterrows() %}
+                <tr>
+                    <td>{{ row['title'] }}</td>
+                    <td>{{ "%.2f" % (row['similarity_score'] * 100) }}%</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            </table>
+        {% endif %}
     </div>
 
 

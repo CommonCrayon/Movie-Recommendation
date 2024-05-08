@@ -26,11 +26,15 @@ def get_recommendations_genre(genres, vectorizer, genre_matrix, movies_dataframe
     # Get indices of top similar movies
     top_indices = genre_similarity.argsort()[::-1][1:NUM_OF_RECOMMENDATIONS_TO_RETURN]  # Exclude the first, as it's the input itself
     
-    # Get the movie titles and similarity scores
-    recommended_movies = movies_dataframe.iloc[top_indices][['title']].copy()
-    recommended_movies['similarity_score'] = genre_similarity[top_indices]
+    # Filter out movies with similarity score of 0
+    nonzero_indices = [index for index in top_indices if genre_similarity[index] != 0]
     
+    # Get the movie titles and similarity scores
+    recommended_movies = movies_dataframe.iloc[nonzero_indices][['title']].copy()
+    recommended_movies['similarity_score'] = genre_similarity[nonzero_indices]
+        
     return recommended_movies.reset_index()
+
 
 # Function to generate movie recommendations based on selected genres
 def genre_recommendations(selected_genres):

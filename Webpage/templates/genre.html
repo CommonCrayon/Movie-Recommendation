@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/layout.css') }}">
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/genre.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poetsen+One&display=swap" rel="stylesheet">
+    <title>Movie Recommendations</title>
+</head>
+<body>
+    <div class="header">Movie Recommendations</div>
+    <div class="navbar">
+        <a href="/">About</a>
+        <a href="/genre">Genre Recommendations</a>
+        <a href="/login">User Recommendations</a>
+    </div>
+
+    <div class="div-main">
+
+        <h2>Select one or more genres to generate Movie Recommendations!</h2>
+
+        <form id="genre-form" action="/genre" method="POST">
+            <div class="genre-grid">
+                <div class="genre" data-genre="Action">Action</div>
+                <div class="genre" data-genre="Adventure">Adventure</div>
+                <div class="genre" data-genre="Animation">Animation</div>
+                <div class="genre" data-genre="Children's">Children's</div>
+                <div class="genre" data-genre="Comedy">Comedy</div>
+                <div class="genre" data-genre="Crime">Crime</div>
+                <div class="genre" data-genre="Documentary">Documentary</div>
+                <div class="genre" data-genre="Drama">Drama</div>
+                <div class="genre" data-genre="Fantasy">Fantasy</div>
+                <div class="genre" data-genre="Film-Noir">Film-Noir</div>
+                <div class="genre" data-genre="Horror">Horror</div>
+                <div class="genre" data-genre="Musical">Musical</div>
+                <div class="genre" data-genre="Mystery">Mystery</div>
+                <div class="genre" data-genre="Romance">Romance</div>
+                <div class="genre" data-genre="Sci-Fi">Sci-Fi</div>
+                <div class="genre" data-genre="Thriller">Thriller</div>
+                <div class="genre" data-genre="War">War</div>
+                <div class="genre" data-genre="Western">Western</div>
+            </div>
+            <button id="execute-btn" disabled>Generate</button>
+        </form>
+
+        {% if recommendations is defined %}
+        <table>
+          <thead>
+            <tr>
+              <th>Movie Title</th>
+              <th>Similarity Score</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for index, row in recommendations.iterrows() %}
+              <tr>
+                <td>{{ row['title'] }}</td>
+                <td>{{ "%.2f" % (row['similarity_score'] * 100) }}%</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% endif %}
+    </div>
+
+
+
+    <footer>
+        <div>
+            Made By Talha Ahmed, Samuel Ip and Jackie Lin
+        </div>
+    </footer>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const genres = document.querySelectorAll('.genre');
+            const executeBtn = document.getElementById('execute-btn');
+            const genreForm = document.getElementById('genre-form');
+
+            genres.forEach(genre => {
+                genre.addEventListener('click', function() {
+                    this.classList.toggle('selected');
+                    checkSelectedGenres();
+                });
+            });
+
+            function checkSelectedGenres() {
+                const selectedGenres = document.querySelectorAll('.genre.selected');
+                if (selectedGenres.length > 0) {
+                    executeBtn.removeAttribute('disabled');
+                } else {
+                    executeBtn.setAttribute('disabled', 'disabled');
+                }
+            }
+
+            genreForm.addEventListener('submit', function(event) {
+                event.preventDefault(); // Prevent default form submission
+                const selectedGenres = document.querySelectorAll('.genre.selected');
+                const selectedGenreValues = Array.from(selectedGenres).map(genre => genre.dataset.genre);
+                const hiddenInput = document.createElement('input');
+                hiddenInput.setAttribute('type', 'hidden');
+                hiddenInput.setAttribute('name', 'genres');
+                hiddenInput.setAttribute('value', selectedGenreValues.join(','));
+                this.appendChild(hiddenInput);
+                this.submit(); // Submit the form with hidden input
+            });
+        });
+    </script>
+</body>
+</html>

@@ -17,7 +17,7 @@ def about():
 
 
 
-@app.route('/genre', methods=['POST'])
+@app.route('/genre', methods=['GET', 'POST'])
 def execute():
     selected_genres = request.form.getlist('genres')
     print("Selected genres:", selected_genres)
@@ -26,7 +26,7 @@ def execute():
     recommendations = genre_recommendations(selected_genres)
     
     # Pass recommendations to the template
-    return render_template('index.html', recommendations=recommendations)
+    return render_template('genre.html', recommendations=recommendations)
 
 
 
@@ -68,10 +68,6 @@ def update_rating():
     except Exception as e:
         print(str(e))
         return render_template('user.html', user_id=user_id, recommendations=user_recommendations(user_id), movies=get_movies(user_id))
-
-@app.route('/compare', methods=['GET'])
-def compare():
-    return render_template('compare.html', error=False)
 
 
 if __name__ == '__main__':

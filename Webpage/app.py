@@ -26,7 +26,7 @@ def execute():
     recommendations = genre_recommendations(selected_genres)
     
     # Pass recommendations to the template
-    return render_template('genre.html', recommendations=recommendations)
+    return render_template('genre.html', recommendations=recommendations, selectedGenresString=selected_genres)
 
 
 

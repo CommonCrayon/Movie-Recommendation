@@ -32,7 +32,8 @@ def get_recommendations_genre(genres, vectorizer, genre_matrix, movies_dataframe
     # Get the movie titles and similarity scores
     recommended_movies = movies_dataframe.iloc[nonzero_indices][['title']].copy()
     recommended_movies['similarity_score'] = genre_similarity[nonzero_indices]
-        
+    recommended_movies['genres'] = movies_dataframe.iloc[nonzero_indices]['genres']  # Add genres column
+
     return recommended_movies.reset_index()
 
 

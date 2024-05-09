@@ -44,13 +44,22 @@ utility_matrix = userbase1_dataframe.pivot(index='user id', columns='item id', v
 cosine_sim_df = pd.DataFrame(cosine_sim_matrix, index=user_item_matrix.index, columns=user_item_matrix.index)
 
 
-def check_user_id(user_id):
-    user_dataframe = pd.read_csv("Dataset/Working/u.data", names=['userId', 'item id', 'rating', 'timestamp'], delimiter="\t")
+def get_user_data(user_id):
+    # Read the dataset into a DataFrame
+    user_dataframe = pd.read_csv("Dataset/Working/u.user", names=['user id', 'age', 'gender', 'occupation', 'zip code'], delimiter="|")
 
-    if user_id in user_dataframe['userId'].values:
-        return True
-    else:
-        return False
+    # Filter the DataFrame to find the record with the given user ID
+    filtered_data = user_dataframe[user_dataframe['user id'] == user_id]
+
+    # Convert gender to 'Male' or 'Female'
+    filtered_data['gender'] = filtered_data['gender'].apply(lambda x: 'Male' if x == 'M' else 'Female' if x == 'F' else x)
+
+    # Capitalize the first letter of occupation
+    filtered_data['occupation'] = filtered_data['occupation'].apply(lambda x: x.capitalize())
+
+    # Return the modified DataFrame
+    return filtered_data.reset_index()
+
 
 
 def user_recommendations(user_id, cosine_sim_df=cosine_sim_df, utility_matrix=utility_matrix, movies_dataframe=movies_dataframe):

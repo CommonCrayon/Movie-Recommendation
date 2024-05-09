@@ -19,14 +19,16 @@
     </div>
 
     <div class="div-main">
-        <div class="container">
-            <h2>Welcome User: {{ user_id }}</h2>
-            <h5>User Details</h5>
-            <p>User ID: TODO</p>
-            <p>Age: TODO</p>
-            <p>Gender: TODO</p>
-            <p>Occupation: TODO</p>
-            <p>Zip Code: TODO</p>
+        <div class="container-user-details">
+            <h2>Welcome User: {{ user_data['user id'][0] }}</h2>
+            <hr>
+            <h5 style="margin-left: 4%;">User Details</h5>
+            <hr>
+            <p style="margin-left: 5%;">User ID:  {{user_data['user id'][0]}}</p>
+            <p style="margin-left: 5%;">Age:  {{user_data['age'][0]}}</p>
+            <p style="margin-left: 5%;">Gender:  {{user_data['gender'][0]}}</p>
+            <p style="margin-left: 5%;">Occupation:  {{user_data['occupation'][0]}}</p>
+            <p style="margin-left: 5%;">Zip Code:  {{user_data['zip code'][0]}}</p>
         </div>
 
 
@@ -92,7 +94,7 @@
                     <h3 id="selectedMovieRatingText"></h3>
 
                     <form id="ratingForm" method="post" action="/update">
-                        <input type="hidden" name="user_id" value="{{ user_id }}">
+                        <input type="hidden" name="user_id" value="{{ user_data['user id'][0] }}">
                         <input type="hidden" id="selectedMovieId" name="item_id" value="">
                         <input type="hidden" id="selectedRating" name="rating" value="">
                         <button type="submit" class="button-rate">Submit Rating</button>

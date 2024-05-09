@@ -1,6 +1,6 @@
 from flask import Flask, request, render_template
 from scripts.genreRecommendations import genre_recommendations
-from scripts.userRecommendations import user_recommendations, check_user_id, update_u_data
+from scripts.userRecommendations import user_recommendations, get_user_data, update_u_data
 from scripts.movieDataset import get_movies
 
 app = Flask(__name__)
@@ -38,9 +38,13 @@ def user():
         # Retrieving the user ID from the form
         user_id = int(request.form['userId'])
 
+        user_data = get_user_data(user_id)
+
+        print(user_data)
+
         # Check if user_id exists in the dataframe
-        if check_user_id(user_id):
-            return render_template('user.html', user_id=user_id, recommendations=user_recommendations(user_id), movies=get_movies(user_id))
+        if not user_data.empty:
+            return render_template('user.html', user_data=user_data, recommendations=user_recommendations(user_id), movies=get_movies(user_id))
         else:
             return render_template('login.html', error=True)
         

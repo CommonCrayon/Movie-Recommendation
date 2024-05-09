@@ -177,10 +177,12 @@ input[type="text"]::placeholder
 select 
 {
     height: 2.5vw;
-    width: 10vw;
+    width: 24vw;
 
     border: 2px solid #222222;
     border-radius: 4px;
+    
+    margin-left: 8px;
 
     font-size: 1vw;
     color: #222222;
@@ -205,6 +207,7 @@ button[type="submit"]
     width: 10vw;
     height: 2.5vw;
 
+    margin-left: 8px;
 
     font-size: 1.25vw;
     color: var(--font-color);
@@ -248,6 +251,7 @@ button[type="submit"]:hover
 {
     margin: 25px 0 50px 0;
 
+
     border: 2px solid #222222;
     background-color: #E9B949;
 
@@ -276,10 +280,11 @@ button[type="submit"]:hover
 
 .checked 
 {
-    color: rgb(255, 255, 0);
+    color: rgb(196, 255, 0);
 }
 
-.button-rate {
+.button-rate 
+{
     height: 64px;
     width: 256px;
     margin-right: 50px; 

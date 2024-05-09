@@ -55,13 +55,13 @@ form {
     align-items: center;
     justify-content: center;
     height: 100%;
-    margin: 0 auto; /* Center horizontally */
-    max-width: 400px; /* Limit form width */
+    margin: 0 auto;
+    max-width: 400px;
 }
 
 #userId {
     width: 100%;
-    box-sizing: border-box; /* Include padding in width calculation */
+    box-sizing: border-box;
     margin-bottom: 20px;
     padding: 10px;
     font-size: 16px;

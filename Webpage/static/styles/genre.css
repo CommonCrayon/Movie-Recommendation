@@ -65,30 +65,28 @@ h2
     border: 4px solid var(--light-blue-3);
 }
 
-#execute-btn 
-{
-    margin: 20px 20%;
 
+
+#execute-btn
+{
     cursor: pointer;
 
     height: 4vw;
     width: 60%;
 
-    font-size: 1.5vw;
+    margin: 20px 20%;
+
+    font-size: 1.25vw;
     color: var(--font-color);
     font-family: "Poetsen One", sans-serif;
     font-weight: 500;
     font-style: normal;
 
-    background-color: var(--light-blue-2);
-
+    background-color: var(--light-blue-4);
+    border: 2px solid var(--light-blue-2);
     border-radius: 4px;
-}
 
-#execute-btn:disabled 
-{
-    background-color: var(--light-blue-1);
-    cursor: not-allowed;
+    transition: background-color 0.3s ease;
 }
 
 #execute-btn:hover 
@@ -96,6 +94,11 @@ h2
     background-color: var(--light-blue-5);
 }
 
+#execute-btn:disabled 
+{
+    background-color: var(--light-blue-1);
+    cursor: not-allowed;
+}
 
 p
 {

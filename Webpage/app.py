@@ -25,8 +25,10 @@ def execute():
     # Call the function to generate recommendations
     recommendations = genre_recommendations(selected_genres)
 
+    genre_string = ','.join(selected_genres).replace(",", ", ")
+
     # Pass recommendations to the template
-    return render_template('genre.html', recommendations=recommendations, selectedGenresString=', '.join(selected_genres))
+    return render_template('genre.html', recommendations=recommendations, selectedGenresString=genre_string)
 
 
 

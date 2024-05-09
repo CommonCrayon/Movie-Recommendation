@@ -20,7 +20,6 @@ def about():
 @app.route('/genre', methods=['GET', 'POST'])
 def execute():
     selected_genres = request.form.getlist('genres')
-    print("Selected genres:", selected_genres)
     
     # Call the function to generate recommendations
     recommendations = genre_recommendations(selected_genres)
@@ -40,21 +39,15 @@ def user():
 
         user_data = get_user_data(user_id)
 
-        print(user_data)
-
         # Check if user_id exists in the dataframe
         if not user_data.empty:
             return render_template('user.html', user_data=user_data, recommendations=user_recommendations(user_id), movies=get_movies(user_id))
         else:
             return render_template('login.html', error=True)
         
-    except (KeyError, ValueError) as e:
+    except (Exception, KeyError, ValueError) as e:
         # Handle errors such as missing key in form or inability to convert to integer
         print("Error:", e)
-        return render_template('login.html', error=True)
-    except Exception as e:
-        # Handle other unexpected errors
-        print("Unexpected Error:", e)
         return render_template('login.html', error=True)
 
 
@@ -66,14 +59,19 @@ def update_rating():
         item_id = int(request.form['item_id'])
         rating = int(request.form['rating'])
 
+        user_data = get_user_data(user_id)
+
         # Call your update_rating function here
         update_u_data(user_id, item_id, rating)
 
+        #wait for this to finish
+
         # Back to page
-        return render_template('user.html', user_id=user_id, recommendations=user_recommendations(user_id), movies=get_movies(user_id))
-    except Exception as e:
-        print(str(e))
-        return render_template('user.html', user_id=user_id, recommendations=user_recommendations(user_id), movies=get_movies(user_id))
+        return render_template('user.html', user_data=user_data, recommendations=user_recommendations(user_id), movies=get_movies(user_id))
+    except (Exception, KeyError, ValueError) as e:
+        print("Error:", e)
+        return render_template('login.html', error=True)
+
 
 
 if __name__ == '__main__':

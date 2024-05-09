@@ -6,44 +6,6 @@ from datetime import datetime
 NUM_OF_RECOMMENDATIONS_TO_RETURN = 30
 
 
-# Let's assume you have another dataset containing movie information like movie_id, title, genres
-movies_dataframe = pd.read_csv("./Dataset/Working/u.item", delimiter="|", encoding="latin1",
-                               names=["item id", "title", "release date", 
-                                      "video release date", "IMDb URL", "unknown", 
-                                      "Action", "Adventure", "Animation",
-                                      "Children's", "Comedy", "Crime",
-                                      "Documentary", "Drama", "Fantasy",
-                                      "Film-Noir", "Horror", "Musical",
-                                      "Mystery", "Romance", "Sci-Fi",
-                                      "Thriller", "War", "Western"
-                                      ])
-movies_dataframe = movies_dataframe.drop(["release date", "video release date", "IMDb URL",
-                     "unknown", "Action", "Adventure", "Animation",
-                     "Children's", "Comedy", "Crime", "Documentary",
-                     "Drama", "Fantasy", "Film-Noir", "Horror", "Musical",
-                     "Mystery", "Romance", "Sci-Fi","Thriller", "War", "Western"], axis=1)
-
-
-# Reading the dataset
-userbase1_dataframe = pd.read_csv("./Dataset/Working/u.data", names=['user id', 'item id', 'rating', 'timestamp'], delimiter="\t")
-userbase1_dataframe = userbase1_dataframe.drop(["timestamp"], axis=1)
-
-
-# Convert DataFrame to sparse matrix
-user_item_matrix = userbase1_dataframe.pivot(index='user id', columns='item id', values='rating').fillna(0)
-user_item_matrix_sparse = csr_matrix(user_item_matrix.values)
-
-# Calculate cosine similarity matrix
-cosine_sim_matrix = cosine_similarity(user_item_matrix_sparse)
-
-
-utility_matrix = userbase1_dataframe.pivot(index='user id', columns='item id', values='rating').fillna(0)
-
-# Convert cosine similarity matrix to DataFrame for better visualization 
-# Where both the rows and columns are labeled with user ids, and the values represent the cosine similarity between corresponding users based on their ratings.
-cosine_sim_df = pd.DataFrame(cosine_sim_matrix, index=user_item_matrix.index, columns=user_item_matrix.index)
-
-
 def get_user_data(user_id):
     # Read the dataset into a DataFrame
     user_dataframe = pd.read_csv("Dataset/Working/u.user", names=['user id', 'age', 'gender', 'occupation', 'zip code'], delimiter="|")
@@ -62,7 +24,44 @@ def get_user_data(user_id):
 
 
 
-def user_recommendations(user_id, cosine_sim_df=cosine_sim_df, utility_matrix=utility_matrix, movies_dataframe=movies_dataframe):
+def user_recommendations(user_id):
+
+    # Let's assume you have another dataset containing movie information like movie_id, title, genres
+    movies_dataframe = pd.read_csv("./Dataset/Working/u.item", delimiter="|", encoding="latin1",
+                                names=["item id", "title", "release date", 
+                                        "video release date", "IMDb URL", "unknown", 
+                                        "Action", "Adventure", "Animation",
+                                        "Children's", "Comedy", "Crime",
+                                        "Documentary", "Drama", "Fantasy",
+                                        "Film-Noir", "Horror", "Musical",
+                                        "Mystery", "Romance", "Sci-Fi",
+                                        "Thriller", "War", "Western"
+                                        ])
+    movies_dataframe = movies_dataframe.drop(["release date", "video release date", "IMDb URL",
+                        "unknown", "Action", "Adventure", "Animation",
+                        "Children's", "Comedy", "Crime", "Documentary",
+                        "Drama", "Fantasy", "Film-Noir", "Horror", "Musical",
+                        "Mystery", "Romance", "Sci-Fi","Thriller", "War", "Western"], axis=1)
+
+
+    # Reading the dataset
+    userbase1_dataframe = pd.read_csv("./Dataset/Working/u.data", names=['user id', 'item id', 'rating', 'timestamp'], delimiter="\t")
+    userbase1_dataframe = userbase1_dataframe.drop(["timestamp"], axis=1)
+
+
+    # Convert DataFrame to sparse matrix
+    user_item_matrix = userbase1_dataframe.pivot(index='user id', columns='item id', values='rating').fillna(0)
+    user_item_matrix_sparse = csr_matrix(user_item_matrix.values)
+
+    # Calculate cosine similarity matrix
+    cosine_sim_matrix = cosine_similarity(user_item_matrix_sparse)
+
+
+    utility_matrix = userbase1_dataframe.pivot(index='user id', columns='item id', values='rating').fillna(0)
+
+    # Convert cosine similarity matrix to DataFrame for better visualization 
+    # Where both the rows and columns are labeled with user ids, and the values represent the cosine similarity between corresponding users based on their ratings.
+    cosine_sim_df = pd.DataFrame(cosine_sim_matrix, index=user_item_matrix.index, columns=user_item_matrix.index)
 
     # Get cosine similarity scores for the given user
     user_similarity_scores = cosine_sim_df[user_id]
@@ -107,24 +106,8 @@ def update_u_data(user_id, item_id, rating):
     # Read the existing u.data file
     user_dataframe = pd.read_csv("./Dataset/Working/u.data", names=['user id', 'item id', 'rating', 'timestamp'], delimiter="\t")
     
-    # Create user if not found
-    if user_id not in user_dataframe['user id'].values:
-        new_user = pd.DataFrame([[user_id, 0, 0, datetime.now().timestamp()]], columns=['user id', 'item id', 'rating', 'timestamp'])
-        user_dataframe = user_dataframe.append(new_user, ignore_index=True)
-        print(f"User {user_id} created.")
-    
-    # Create item if not found
-    if item_id not in user_dataframe['item id'].values:
-        new_item = pd.DataFrame([[0, item_id, 0, datetime.now().timestamp()]], columns=['user id', 'item id', 'rating', 'timestamp'])
-        user_dataframe = user_dataframe.append(new_item, ignore_index=True)
-        print(f"Item {item_id} created.")
-    
-    # Update the rating for the given user_id and item_id
-    user_dataframe.loc[(user_dataframe['user id'] == user_id) & (user_dataframe['item id'] == item_id), 'rating'] = rating
-    
-    # Update the timestamp
-    user_dataframe.loc[(user_dataframe['user id'] == user_id) & (user_dataframe['item id'] == item_id), 'timestamp'] = datetime.now().timestamp()
-    
+    user_dataframe.drop(user_dataframe[(user_dataframe['user id'] == user_id) & (user_dataframe['item id'] == item_id)].index, inplace=True)
+
     # Save the updated u.data file
     user_dataframe.to_csv("./Dataset/Working/u.data", header=False, index=False, sep='\t')
     

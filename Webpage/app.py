@@ -24,9 +24,9 @@ def execute():
     
     # Call the function to generate recommendations
     recommendations = genre_recommendations(selected_genres)
-    
+
     # Pass recommendations to the template
-    return render_template('genre.html', recommendations=recommendations, selectedGenresString=selected_genres)
+    return render_template('genre.html', recommendations=recommendations, selectedGenresString=', '.join(selected_genres))
 
 
 

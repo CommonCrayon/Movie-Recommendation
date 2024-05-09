@@ -19,26 +19,28 @@
     </div>
 
     <div class="div-main">
-        <h2>Login to see User Recommendations</h2>
-        <form id="userIdForm" action="/user" method="POST">
-            <input type="text" id="userId" name="userId" placeholder="Enter User ID" required>
-            <button type="submit">Enter</button>
-        </form>
+        <div class="container">
+            <h2>Login</h2>
+            <p>Login to see User Specific Recommendations:</p>
+            <form id="userIdForm" action="/user" method="POST">
+                <input type="text" id="userId" name="userId" placeholder="Enter User ID" required>
+
+                {% if error %}
+                    <h3>User Id NOT in database!</h3>
+                {% endif %}
+                
+                <button type="submit">Enter</button>
+            </form>
+
+
+        </div>
     </div>
 
-    {% if error %}
-        <h3>User Id NOT in database!</h3>
-    {% endif %}
 
     <footer>
         <div>
             Made By Talha Ahmed, Samuel Ip and Jackie Lin
         </div>
     </footer>
-
-
-    <script>
-
-    </script>
 </body>
 </html>

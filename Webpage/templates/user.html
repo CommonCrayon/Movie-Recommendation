@@ -19,69 +19,85 @@
     </div>
 
     <div class="div-main">
-        <h2>Welcome User: {{ user_id }}</h2>
+        <div class="container">
+            <h2>Welcome User: {{ user_id }}</h2>
+            <h5>User Details</h5>
+            <p>User ID: TODO</p>
+            <p>Age: TODO</p>
+            <p>Gender: TODO</p>
+            <p>Occupation: TODO</p>
+            <p>Zip Code: TODO</p>
+        </div>
+
 
         {% if recommendations is defined %}
-            <h3>We recommend these Movies for you to watch:</h3>
-
+        <div class="container">
+            <h2>Movie Recommendations Based Off User Ratings</h2>
+            <p>We recommend these Movies for you to watch:</p>
             <table>
                 <thead>
                     <tr>
-                        <th>Movie Title</th>
+                        <th>Rank</th>
+                            <th>Movie Title</th>
                         <th>Aggregated Score</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for index, row in recommendations.iterrows() %}
                         <tr>
+                            <td>{{ loop.index }}</td>
                             <td>{{ row['title'] }}</td>
                             <td>{{ "%.2f" % (row['aggregated_score']) }}</td>
                         </tr>
                     {% endfor %}
                 </tbody>
             </table>
+        </div>
         {% endif %}
 
 
         {% if movies is defined %}
-        <h3>Rate Movies: </h3>
+        <div class="container">
+            <h2>Rate Movies</h2>
+            <p>Rate new movies or update previously rated movies:</p>
 
-        <form id="movieForm">
-            <label for="items">Select a Movie:</label>
-            <input type="text" id="searchInput" onkeyup="filterItems()" placeholder="Search for Movies...">
-            <select id="items" name="items">
-                <option value="" disabled selected>Select a movie</option>
-                {% for index, row in movies.iterrows() %}
-                    <option value="{{row['item id']}}" data-rating="{{row['rating']}}">{{row['title']}}</option>
-                {% endfor %}
-            </select>
-            <button class="button-find" type="submit">Find</button>
-        </form>
-        {% endif %}
+            <form id="movieForm">
+                <label for="items">Select a Movie:</label>
+                <input type="text" id="searchInput" onkeyup="filterItems()" placeholder="Search for Movies...">
+                <select id="items" name="items">
+                    <option value="" disabled selected>Select a movie</option>
+                    {% for index, row in movies.iterrows() %}
+                        <option value="{{row['item id']}}" data-rating="{{row['rating']}}">{{row['title']}}</option>
+                    {% endfor %}
+                </select>
+                <button class="button-find" type="submit">Find</button>
+            </form>
+            {% endif %}
 
-        <div class="div-rate-placeholder">
-            <h1>Pick a Movie to see Rating</h1>
-        </div>
+            <div class="div-rate-placeholder">
+                <h4>Pick a Movie to see Rating</h4>
+            </div>
 
-        <div class="div-rate">
-                <h1 id="selectedMovieTitle">Movie Title</h1>
+            <div class="div-rate">  
+                    <h4 id="selectedMovieTitle">Movie Title</h4>
 
-                <div class="card">
-                    <span onclick="rating(1)"class="star">★</span>
-                    <span onclick="rating(2)"class="star">★</span>
-                    <span onclick="rating(3)"class="star">★</span>
-                    <span onclick="rating(4)"class="star">★</span>
-                    <span onclick="rating(5)"class="star">★</span>
-                </div>
-                
-                <h2 id="selectedMovieRatingText"></h2>
+                    <div class="card">
+                        <span onclick="rating(1)"class="star">★</span>
+                        <span onclick="rating(2)"class="star">★</span>
+                        <span onclick="rating(3)"class="star">★</span>
+                        <span onclick="rating(4)"class="star">★</span>
+                        <span onclick="rating(5)"class="star">★</span>
+                    </div>
+                    
+                    <h3 id="selectedMovieRatingText"></h3>
 
-                <form id="ratingForm" method="post" action="/update">
-                    <input type="hidden" name="user_id" value="{{ user_id }}">
-                    <input type="hidden" id="selectedMovieId" name="item_id" value="">
-                    <input type="hidden" id="selectedRating" name="rating" value="">
-                    <button type="submit" class="button-rate">Submit Rating</button>
-                </form>
+                    <form id="ratingForm" method="post" action="/update">
+                        <input type="hidden" name="user_id" value="{{ user_id }}">
+                        <input type="hidden" id="selectedMovieId" name="item_id" value="">
+                        <input type="hidden" id="selectedRating" name="rating" value="">
+                        <button type="submit" class="button-rate">Submit Rating</button>
+                    </form>
+            </div>
         </div>
     </div>
 

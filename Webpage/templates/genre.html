@@ -53,22 +53,24 @@
             <p>Generated from selected genres: {{ selectedGenresString }}</p>
 
             <table>
-            <thead>
-                <tr>
-                <th>Movie Title</th>
-                <th>Genres</th>
-                <th>Similarity Percentage</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for index, row in recommendations.iterrows() %}
-                <tr>
-                    <td>{{ row['title'] }}</td>
-                    <td>{{ row['genres']}}</td>
-                    <td>{{ "%.2f" % (row['similarity_score'] * 100) }}%</td>
-                </tr>
-                {% endfor %}
-            </tbody>
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Movie Title</th>
+                        <th>Genres</th>
+                        <th>Similarity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for index, row in recommendations.iterrows() %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td>{{ row['title'] }}</td>
+                        <td>{{ row['genres']}}</td>
+                        <td>{{ "%.2f" % (row['similarity_score'] * 100) }}%</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
             </table>
         </div>
         {% endif %}

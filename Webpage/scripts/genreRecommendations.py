@@ -2,7 +2,7 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import pandas as pd
 
-NUM_OF_RECOMMENDATIONS_TO_RETURN = 30
+NUM_OF_RECOMMENDATIONS_TO_RETURN = 31
 
 def extract_genres(row):
     genres_columns = ["Action", "Adventure", "Animation", "Children's", 

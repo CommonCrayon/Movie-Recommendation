@@ -1,7 +1,7 @@
 import pandas as pd
 from sklearn.metrics.pairwise import cosine_similarity
 from scipy.sparse import csr_matrix
-from datetime import datetime
+from time import time
 
 NUM_OF_RECOMMENDATIONS_TO_RETURN = 30
 
@@ -106,7 +106,14 @@ def update_u_data(user_id, item_id, rating):
     # Read the existing u.data file
     user_dataframe = pd.read_csv("./Dataset/Working/u.data", names=['user id', 'item id', 'rating', 'timestamp'], delimiter="\t")
     
-    user_dataframe.drop(user_dataframe[(user_dataframe['user id'] == user_id) & (user_dataframe['item id'] == item_id)].index, inplace=True)
+
+    index_to_replace = user_dataframe[(user_dataframe['user id'] == user_id) & (user_dataframe['item id'] == item_id)].index
+
+    if not index_to_replace.empty:
+        user_dataframe.loc[index_to_replace, ['user id', 'item id', 'rating', 'timestamp']] = [user_id, item_id, rating, '12345']
+    else:
+        user_dataframe.loc[len(user_dataframe)] = [user_id, item_id, rating, '12345']
+
 
     # Save the updated u.data file
     user_dataframe.to_csv("./Dataset/Working/u.data", header=False, index=False, sep='\t')

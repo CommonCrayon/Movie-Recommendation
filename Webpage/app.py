@@ -109,6 +109,15 @@ def user():
 
         # Fetch all rows of the result set
         user_data = cursor.fetchone()
+
+        user_data = list(user_data)  # Convert tuple to list to enable modification
+        user_data[3] = user_data[3].capitalize()  # Capitalize first letter
+
+        # Replace gender abbreviations with full gender names
+        if user_data[2] == 'M':
+            user_data[2] = 'Male'
+        elif user_data[2] == 'F':
+            user_data[2] = 'Female'
         # =====================================================================================================================
 
         # GET MOVIE RECOMMENDATIONS ===========================================================================================
@@ -184,6 +193,15 @@ def update_rating():
 
         # Fetch all rows of the result set
         user_data = cursor.fetchone()
+
+        user_data = list(user_data)  # Convert tuple to list to enable modification
+        user_data[3] = user_data[3].capitalize()  # Capitalize first letter
+
+        # Replace gender abbreviations with full gender names
+        if user_data[2] == 'M':
+            user_data[2] = 'Male'
+        elif user_data[2] == 'F':
+            user_data[2] = 'Female'
         # =====================================================================================================================
 
         # GET MOVIE RECOMMENDATIONS ===========================================================================================

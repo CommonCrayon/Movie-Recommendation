@@ -5,7 +5,7 @@ import pandas as pd
 NUM_OF_RECOMMENDATIONS_TO_RETURN = 31
 
 def extract_genres(row):
-    genres_columns = ["Action", "Adventure", "Animation", "Children's", 
+    genres_columns = ["Action", "Adventure", "Animation", "Childrens", 
                 "Comedy", "Crime", "Documentary", "Drama", "Fantasy",
                 "Film-Noir", "Horror", "Musical", "Mystery", "Romance",
                 "Sci-Fi", "Thriller", "War", "Western"]
@@ -39,16 +39,16 @@ def get_recommendations_genre(genres, vectorizer, genre_matrix, movies_dataframe
 
 
 # Function to generate movie recommendations based on selected genres
-def genre_recommendations(selected_genres):
-    movies_dataframe = pd.read_csv("./Dataset/Working/u.item", delimiter="|", encoding="latin1",
-                                names=["item id", "title", "release date", 
-                                        "video release date", "IMDb URL", "unknown", 
-                                        "Action", "Adventure", "Animation",
-                                        "Children's", "Comedy", "Crime",
-                                        "Documentary", "Drama", "Fantasy",
-                                        "Film-Noir", "Horror", "Musical",
-                                        "Mystery", "Romance", "Sci-Fi",
-                                        "Thriller", "War", "Western"
+def genre_recommendations(selected_genres, movie_dataset):
+    movies_dataframe = pd.DataFrame(movie_dataset,
+                                columns=["item_id", "title", "release_date", 
+                                            "video_release_date", "IMDb_URL", "unknown", 
+                                            "Action", "Adventure", "Animation",
+                                            "Childrens", "Comedy", "Crime",
+                                            "Documentary", "Drama", "Fantasy",
+                                            "Film-Noir", "Horror", "Musical",
+                                            "Mystery", "Romance", "Sci-Fi",
+                                            "Thriller", "War", "Western"
                                         ])
     movies_dataframe = movies_dataframe.drop(["unknown"], axis=1)
     movies_dataframe['genres'] = movies_dataframe.apply(extract_genres, axis=1)

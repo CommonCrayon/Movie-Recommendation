@@ -42,7 +42,6 @@ def establish_connection():
                                             "Mystery", "Romance", "Sci-Fi",
                                             "Thriller", "War", "Western"
                                             ])
-        movies_dataset.drop(["release_date", "video_release_date", "IMDb_URL", "unknown"], axis=1)
         movies_dataset.to_sql('movie', conn, if_exists='fail', index=False)
     except:
         pass
@@ -82,9 +81,12 @@ def execute():
     cursor = conn.cursor()
 
     selected_genres = request.form.getlist('genres')
+
+    cursor.execute("SELECT * FROM movie")
+    movie_dataset = cursor.fetchall()
     
     # Call the function to generate recommendations
-    recommendations = genre_recommendations(selected_genres)
+    recommendations = genre_recommendations(selected_genres, movie_dataset)
 
     genre_string = ','.join(selected_genres).replace(",", ", ")
 

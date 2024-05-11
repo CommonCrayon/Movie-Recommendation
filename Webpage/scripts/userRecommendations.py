@@ -14,10 +14,10 @@ def get_user_data(user_id):
     filtered_data = user_dataframe[user_dataframe['user id'] == user_id]
 
     # Convert gender to 'Male' or 'Female'
-    filtered_data['gender'] = filtered_data['gender'].apply(lambda x: 'Male' if x == 'M' else 'Female' if x == 'F' else x)
+    filtered_data.loc[:, 'gender'] = filtered_data['gender'].map({'M': 'Male', 'F': 'Female'}).fillna(filtered_data['gender'])
 
     # Capitalize the first letter of occupation
-    filtered_data['occupation'] = filtered_data['occupation'].apply(lambda x: x.capitalize())
+    filtered_data.loc[:, 'occupation'] = filtered_data['occupation'].str.capitalize()
 
     # Return the modified DataFrame
     return filtered_data.reset_index()
@@ -110,9 +110,9 @@ def update_u_data(user_id, item_id, rating):
     index_to_replace = user_dataframe[(user_dataframe['user id'] == user_id) & (user_dataframe['item id'] == item_id)].index
 
     if not index_to_replace.empty:
-        user_dataframe.loc[index_to_replace, ['user id', 'item id', 'rating', 'timestamp']] = [user_id, item_id, rating, str(int(time.time()))]
+        user_dataframe.loc[index_to_replace, ['user id', 'item id', 'rating', 'timestamp']] = [user_id, item_id, rating, int(time.time())]
     else:
-        user_dataframe.loc[len(user_dataframe)] = [user_id, item_id, rating, str(int(time.time()))]
+        user_dataframe.loc[len(user_dataframe)] = [user_id, item_id, rating, int(time.time())]
 
 
     # Save the updated u.data file

@@ -1,7 +1,7 @@
 import pandas as pd
 from sklearn.metrics.pairwise import cosine_similarity
 from scipy.sparse import csr_matrix
-from time import time
+import time
 
 NUM_OF_RECOMMENDATIONS_TO_RETURN = 30
 
@@ -110,9 +110,9 @@ def update_u_data(user_id, item_id, rating):
     index_to_replace = user_dataframe[(user_dataframe['user id'] == user_id) & (user_dataframe['item id'] == item_id)].index
 
     if not index_to_replace.empty:
-        user_dataframe.loc[index_to_replace, ['user id', 'item id', 'rating', 'timestamp']] = [user_id, item_id, rating, '12345']
+        user_dataframe.loc[index_to_replace, ['user id', 'item id', 'rating', 'timestamp']] = [user_id, item_id, rating, str(int(time.time()))]
     else:
-        user_dataframe.loc[len(user_dataframe)] = [user_id, item_id, rating, '12345']
+        user_dataframe.loc[len(user_dataframe)] = [user_id, item_id, rating, str(int(time.time()))]
 
 
     # Save the updated u.data file

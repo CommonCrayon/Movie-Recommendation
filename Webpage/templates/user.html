@@ -98,7 +98,7 @@
                     <form id="ratingForm" method="post" action="/update">
                         <input type="hidden" name="user_id" value="{{ user_data['user id'][0] }}">
                         <input type="hidden" id="selectedMovieId" name="item_id" value="">
-                        <input type="hidden" id="selectedRating" name="rating" value="">
+                        <input type="hidden" id="selectedRating" name="rating_value" value="">
                         <button type="submit" class="button-rate">Submit Rating</button>
                     </form>
             </div>
@@ -199,7 +199,7 @@
             var selectedMovie = document.getElementById('items');
 
             document.getElementById('selectedMovieId').value = selectedMovie.value;
-            document.getElementById('selectedRating').value = Math.round(selectedMovie.options[selectedMovie.selectedIndex].dataset.rating);
+            document.getElementById('selectedRating').value = Math.round(document.getElementById('selectedMovieRatingText').textContent);
         });
       </script>
 </body>

@@ -57,7 +57,9 @@ def update_rating():
     try:
         user_id = int(request.form['user_id'])
         item_id = int(request.form['item_id'])
-        rating = int(request.form['rating'])
+        rating = int(request.form['rating_value'])
+
+        print("New RATING: ", rating)
 
         user_data = get_user_data(user_id)
 

@@ -1,23 +1,16 @@
 import pandas as pd
 from sklearn.metrics.pairwise import cosine_similarity
 from scipy.sparse import csr_matrix
-import time
 
 NUM_OF_RECOMMENDATIONS_TO_RETURN = 30
 
 
-def user_recommendations(user_id, conn):
-    cursor = conn.cursor()
-
+def user_recommendations(user_id, ratings_dataset, movie_dataset):
     # Fetch ratings data for all users
-    cursor.execute("SELECT * FROM rating")
-    ratings_data = cursor.fetchall()
-    ratings_data = pd.DataFrame(ratings_data, columns=['user_id', 'item_id', 'rating', 'timestamp'])
+    ratings_data = pd.DataFrame(ratings_dataset, columns=['user_id', 'item_id', 'rating', 'timestamp'])
 
     # Fetch movie data
-    cursor.execute("SELECT * FROM movie")
-    movie_data = cursor.fetchall()
-    movie_data = pd.DataFrame(movie_data, columns=["item_id", "title", "release date", 
+    movie_data = pd.DataFrame(movie_dataset, columns=["item_id", "title", "release date", 
                                         "video release date", "IMDb URL", "unknown", 
                                         "Action", "Adventure", "Animation",
                                         "Childrens", "Comedy", "Crime",
@@ -78,25 +71,3 @@ def user_recommendations(user_id, conn):
     recommended_items_df = recommended_items_df.sort_values(by='aggregated_score', ascending=False).reset_index(drop=True)
     
     return recommended_items_df
-
-
-
-def update_u_data(user_id, item_id, rating, conn):
-    cursor = conn.cursor()
-
-    # Check if the record already exists
-    cursor.execute("SELECT * FROM rating WHERE user_id = ? AND item_id = ?", (user_id, item_id))
-    existing_record = cursor.fetchone()
-
-    # If record exists, update it; otherwise, insert a new record
-    if existing_record:
-        cursor.execute("UPDATE rating SET rating = ?, timestamp = ? WHERE user_id = ? AND item_id = ?",
-                       (rating, int(time.time()), user_id, item_id))
-    else:
-        cursor.execute("INSERT INTO rating (user_id, item_id, rating, timestamp) VALUES (?, ?, ?, ?)",
-                       (user_id, item_id, rating, int(time.time())))
-
-    # Commit changes to the database
-    conn.commit()
-
-    print("Database updated successfully.")

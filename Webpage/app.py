@@ -1,6 +1,6 @@
 from flask import Flask, request, render_template
 from scripts.genreRecommendations import genre_recommendations
-from scripts.userRecommendations import user_recommendations
+from scripts.userRecommendations import get_predicted_rating_for_movie
 import sqlite3
 import pandas as pd
 from flask import g
@@ -127,7 +127,7 @@ def user():
         cursor.execute("SELECT * FROM movie")
         movie_dataset = cursor.fetchall()
         
-        recommendations_dataset = user_recommendations(user_id, ratings_dataset, movie_dataset)
+        recommendations_dataset = get_predicted_rating_for_movie(user_id, ratings_dataset, movie_dataset)
         # =====================================================================================================================
 
         # GET MOVIES AND THEIR RATING BY USER =================================================================================
@@ -211,7 +211,7 @@ def update_rating():
         cursor.execute("SELECT * FROM movie")
         movie_dataset = cursor.fetchall()
         
-        recommendations_dataset = user_recommendations(user_id, ratings_dataset, movie_dataset)
+        recommendations_dataset = get_predicted_rating_for_movie(user_id, ratings_dataset, movie_dataset)
         # =====================================================================================================================
 
         # GET MOVIES AND THEIR RATING BY USER =================================================================================

@@ -40,16 +40,16 @@
                 <thead>
                     <tr>
                         <th>Rank</th>
-                            <th>Movie Title</th>
-                        <th>Aggregated Score</th>
+                        <th>Movie Title</th>
+                        <th>Predicted Rating</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for index, row in recommendations.iterrows() %}
+                    {% for row in recommendations %}
                         <tr>
                             <td>{{ loop.index }}</td>
                             <td>{{ row['title'] }}</td>
-                            <td>{{ "%.2f" % (row['aggregated_score']) }}</td>
+                            <td>{{ row['predicted_rating']|round(2) }}</td>
                         </tr>
                     {% endfor %}
                 </tbody>

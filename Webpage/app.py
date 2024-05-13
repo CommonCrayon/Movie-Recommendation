@@ -25,14 +25,14 @@ def establish_connection():
 
     # USER DATASET
     try:
-        user_dataset = pd.read_csv("Dataset/Working/u.user", names=['user_id', 'age', 'gender', 'occupation', 'zip_code'], delimiter="|")
+        user_dataset = pd.read_csv("Dataset/u.user", names=['user_id', 'age', 'gender', 'occupation', 'zip_code'], delimiter="|")
         user_dataset.to_sql('user', conn, if_exists='fail', index=False)
     except:
         pass
 
     # MOVIE DATASET
     try:
-        movies_dataset = pd.read_csv("./Dataset/Working/u.item", delimiter="|", encoding="latin1",
+        movies_dataset = pd.read_csv("./Dataset/u.item", delimiter="|", encoding="latin1",
                                     names=["item_id", "title", "release_date", 
                                             "video_release_date", "IMDb_URL", "unknown", 
                                             "Action", "Adventure", "Animation",
@@ -49,7 +49,7 @@ def establish_connection():
 
     # RATING DATASET
     try:
-        rating_dataset = pd.read_csv("./Dataset/Working/u.data", names=['user_id', 'item_id', 'rating', 'timestamp'], delimiter="\t")
+        rating_dataset = pd.read_csv("./Dataset/u.data", names=['user_id', 'item_id', 'rating', 'timestamp'], delimiter="\t")
         rating_dataset.to_sql('rating', conn, if_exists='fail', index=False)
     except:
         pass
